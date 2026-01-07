@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Got Code Problems? Call JT.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            font-family: 'Space Mono', monospace;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        /* Scanline effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.1) 0px,
+                rgba(0, 0, 0, 0.1) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .tagline-top {
+            font-family: 'Space Mono', monospace;
+            font-size: 1.2rem;
+            color: #ff6b35;
+            text-transform: uppercase;
+            letter-spacing: 0.3em;
+            margin-bottom: 1rem;
+            animation: flicker 3s infinite;
+        }
+
+        .main-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 15vw, 12rem);
+            line-height: 0.9;
+            color: #fff;
+            text-shadow: 
+                0 0 10px #00ff88,
+                0 0 20px #00ff88,
+                0 0 40px #00ff88,
+                0 0 80px #00ff88;
+            margin-bottom: 1rem;
+        }
+
+        .main-title span {
+            display: block;
+        }
+
+        .subtitle {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(1.5rem, 5vw, 3rem);
+            color: #ff6b35;
+            letter-spacing: 0.1em;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .divider {
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00ff88, transparent);
+            margin: 3rem 0;
+            box-shadow: 0 0 20px #00ff88;
+        }
+
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .service-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(0, 255, 136, 0.2);
+            padding: 2rem;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), transparent);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .service-card:hover {
+            border-color: #00ff88;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.2);
+        }
+
+        .service-card:hover::before {
+            opacity: 1;
+        }
+
+        .service-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .service-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.8rem;
+            color: #00ff88;
+            margin-bottom: 0.5rem;
+            letter-spacing: 0.05em;
+        }
+
+        .service-desc {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #888;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(255, 107, 53, 0.05);
+            border: 2px dashed #ff6b35;
+            margin-bottom: 3rem;
+        }
+
+        .cta-heading {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(2rem, 6vw, 4rem);
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .cta-subtext {
+            font-size: 1rem;
+            color: #888;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 3rem;
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            letter-spacing: 0.1em;
+            color: #0a0a0a;
+            background: #00ff88;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+        }
+
+        .cta-button:hover {
+            background: #fff;
+            box-shadow: 0 0 40px rgba(0, 255, 136, 0.8);
+            transform: scale(1.05);
+        }
+
+        .testimonial {
+            text-align: center;
+            padding: 2rem;
+            font-style: italic;
+            color: #666;
+            border-left: 3px solid #ff6b35;
+            margin: 3rem auto;
+            max-width: 700px;
+        }
+
+        .testimonial-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1rem;
+        }
+
+        .testimonial-author {
+            color: #ff6b35;
+            font-style: normal;
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-tagline {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.5rem;
+            color: #444;
+            margin-bottom: 1rem;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .contact-item {
+            color: #00ff88;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .contact-item:hover {
+            color: #fff;
+        }
+
+        .disclaimer {
+            font-size: 0.75rem;
+            color: #333;
+            margin-top: 2rem;
+        }
+
+        /* Neon flicker animation */
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            92% { opacity: 1; }
+            93% { opacity: 0.8; }
+            94% { opacity: 1; }
+            96% { opacity: 0.9; }
+            97% { opacity: 1; }
+        }
+
+        /* Floating animation for fun */
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .floating {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .services {
+                grid-template-columns: 1fr;
+            }
+            
+            .contact-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="hero">
+            <p class="tagline-top">⚡ When your code hits the fan ⚡</p>
+            <h1 class="main-title">
+                <span>BETTER</span>
+                <span>CALL JT</span>
+            </h1>
+            <p class="subtitle">Software Engineering & Digital Problem Solving</p>
+        </header>
+
+        <div class="divider"></div>
+
+        <section class="services">
+            <div class="service-card">
+                <div class="service-icon">🔧</div>
+                <h3 class="service-title">Full-Stack Wizardry</h3>
+                <p class="service-desc">From database dungeons to frontend fantasies. I build the whole enchilada. React, Python, Node, Go — you name it, I ship it.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🚀</div>
+                <h3 class="service-title">DevOps & CI/CD</h3>
+                <p class="service-desc">Pipelines so smooth they make butter jealous. AWS, GCP, Docker, Kubernetes, Terraform. Automate everything. Sleep soundly.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🔥</div>
+                <h3 class="service-title">Fire Fighting</h3>
+                <p class="service-desc">Production down? Legacy code nightmare? Impossible deadline? I thrive in chaos. Bring me your disasters.</p>
+            </div>
+            <div class="service-card">
+                <div class="service-icon">🏗️</div>
+                <h3 class="service-title">Architecture & Strategy</h3>
+                <p class="service-desc">Building something new? Let's architect it right the first time. Scalable, maintainable, and won't make the next dev cry.</p>
+            </div>
+        </section>
+
+        <div class="cta-section">
+            <h2 class="cta-heading">🚨 Got a Problem? Let's Talk. 🚨</h2>
+            <p class="cta-subtext">
+                No job too weird. No stack too old. No deadline too tight.<br>
+                <strong>First consultation is on the house.</strong>
+            </p>
+            <a href="mailto:hello@example.com" class="cta-button">📞 Get In Touch</a>
+        </div>
+
+        <blockquote class="testimonial">
+            <p class="testimonial-text">"We had a production meltdown at 2 AM. JT fixed it before I finished my panic coffee. Absolute legend."</p>
+            <cite class="testimonial-author">— A Very Relieved CTO</cite>
+        </blockquote>
+
+        <footer class="footer">
+            <p class="footer-tagline">No Fluff. No BS. Just Solutions.</p>
+            <div class="contact-info">
+                <a href="mailto:hello@example.com" class="contact-item">📧 hello@example.com</a>
+                <a href="https://github.com" class="contact-item" target="_blank">💻 GitHub</a>
+                <a href="https://linkedin.com" class="contact-item" target="_blank">💼 LinkedIn</a>
+            </div>
+            <p class="disclaimer">* Results may include functional code, reduced stress, and the urge to high-five someone.</p>
+        </footer>
+    </div>
+</body>
+</html>
